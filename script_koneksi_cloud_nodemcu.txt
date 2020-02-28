@@ -3,14 +3,18 @@
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
 
+#define LED 2  
+
 const char* wifiName = "Andro";
 const char* wifiPass = "caberg2010";
 
 //Web Server address to read/write from 
-const char *host = "https://vokasitibrawijaya.000webhostapp.com/api.php";
+const char *host = "http://displaymasjid.my.id/vokasiti/api.php";
 
 void setup() {
-  
+   pinMode(LED,OUTPUT); 
+
+   
   Serial.begin(115200);
   delay(10);
   Serial.println();
@@ -71,6 +75,26 @@ JsonObject& result_0 = root["result"][0];
     Serial.println(result_0["nama_lampu"].as<char*>());
     Serial.println(result_0["status"].as<char*>());
 //    Serial.println(root["data"][1].as<char*>());
+
+
+if (result_0["status"]== "on"){
+
+Serial.println(F("SIAP NYALAKAN LAMPU"));
+digitalWrite(LED,LOW);
+  
+}
+
+if (result_0["status"]== "off"){
+
+Serial.println(F("MATIKAN LAMPU"));
+digitalWrite(LED,HIGH);
+  
+}
+
+
+
+
+
   }
   else
   {
@@ -79,5 +103,5 @@ JsonObject& result_0 = root["result"][0];
 
   http.end();  //Close connection
   
-  delay(5000);  //GET Data at every 5 seconds
+  delay(1);  //GET Data at every 5 seconds
 }
